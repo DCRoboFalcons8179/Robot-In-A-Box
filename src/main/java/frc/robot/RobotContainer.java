@@ -20,46 +20,50 @@ public class RobotContainer {
   // Subsystems
   private final KrakenSubsystem krakenSubsystem = new KrakenSubsystem();
   private final VisionSubsystem visionSubsystem = new VisionSubsystem();
-  
+
   // Controllers
-  private final CommandXboxController driverController = 
+  private final CommandXboxController driverController =
       new CommandXboxController(OperatorConstants.DRIVER_CONTROLLER_PORT);
-  
+
   public RobotContainer() {
     configureBindings();
   }
 
   private void configureBindings() {
     // Example button bindings - customize these to your preference
-    
+
     // A button - go to home position (0 rotations)
-    driverController.a().onTrue(
-        new SetKrakenPosition(krakenSubsystem, KrakenConstants.POSITION_HOME));
-    
+    driverController
+        .a()
+        .onTrue(new SetKrakenPosition(krakenSubsystem, KrakenConstants.POSITION_HOME));
+
     // B button - go to mid position
-    driverController.b().onTrue(
-        new SetKrakenPosition(krakenSubsystem, KrakenConstants.POSITION_MID));
-    
+    driverController
+        .b()
+        .onTrue(new SetKrakenPosition(krakenSubsystem, KrakenConstants.POSITION_MID));
+
     // Y button - go to high position
-    driverController.y().onTrue(
-        new SetKrakenPosition(krakenSubsystem, KrakenConstants.POSITION_HIGH));
-    
+    driverController
+        .y()
+        .onTrue(new SetKrakenPosition(krakenSubsystem, KrakenConstants.POSITION_HIGH));
+
     // X button - reset encoder to 0
-    driverController.x().onTrue(
-        Commands.runOnce(() -> krakenSubsystem.resetPosition(), krakenSubsystem));
-    
+    driverController
+        .x()
+        .onTrue(Commands.runOnce(() -> krakenSubsystem.resetPosition(), krakenSubsystem));
+
     // D-pad Up - run at constant speed (0.5 rotations per second)
-    driverController.povUp()
-        .whileTrue(new RunKrakenAtSpeed(krakenSubsystem, 5.0));
-    
+    driverController.povUp().whileTrue(new RunKrakenAtSpeed(krakenSubsystem, 5.0));
+
     // D-pad Down - move to position 12 if AprilTag ID 15 is seen
-    driverController.povDown()
+    driverController
+        .povDown()
         .onTrue(new MoveToPositionIfAprilTagSeen(visionSubsystem, krakenSubsystem));
   }
 
- public Command getAutonomousCommand() {
+  public Command getAutonomousCommand() {
     // Autonomous command - detect AprilTag ID (1-15) and move to that many rotations
     // ID 1 -> 1.0 rotations, ID 2 -> 2.0 rotations, etc.
     return new AutoMoveToAprilTagID(visionSubsystem, krakenSubsystem);
- }
+  }
 }
